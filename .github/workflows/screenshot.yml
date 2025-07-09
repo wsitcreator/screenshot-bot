@@ -21,7 +21,7 @@ jobs:
         run: npm install puppeteer
 
       - name: Take Screenshot
-        run: node take-screenshot.js
+        run: node screenshot.js
 
       - name: Commit and Push
         run: |
