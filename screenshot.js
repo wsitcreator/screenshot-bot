@@ -7,11 +7,13 @@ const path = require('path');
     headless: "new",
     args: ['--no-sandbox']
   });
+
   const page = await browser.newPage();
 
+  // تنظیم سایز و زوم مناسب برای فونت واضح
   await page.setViewport({
-    width: 800,
-    height: 1200,
+    width: 390,   // مشابه iPhone 12
+    height: 844,
     deviceScaleFactor: 2
   });
 
@@ -19,15 +21,15 @@ const path = require('path');
     waitUntil: 'networkidle2'
   });
 
+  // پس‌زمینه ترنسپرنت
   await page.evaluate(() => {
     document.body.style.background = 'transparent';
-    document.body.style.setProperty('background', 'transparent', 'important');
   });
 
   await page.screenshot({
     path: 'screenshot.png',
-    fullPage: true,
-    omitBackground: true
+    fullPage: false,
+    omitBackground: true  // کلید ترنسپرنت بودن
   });
 
   await browser.close();
