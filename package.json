@@ -1,0 +1,12 @@
+{
+  "name": "screenshot-bot",
+  "version": "1.0.0",
+  "description": "Daily screenshot from GitHub Pages",
+  "main": "screenshot.js",
+  "scripts": {
+    "start": "node screenshot.js"
+  },
+  "dependencies": {
+    "puppeteer": "^21.3.8"
+  }
+}
