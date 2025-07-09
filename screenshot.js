@@ -20,10 +20,15 @@ const path = require('path');
   });
 
   await page.evaluate(() => {
-    document.body.style.backgroundColor = '#e7caa7';
+    document.body.style.background = 'transparent';
+    document.body.style.setProperty('background', 'transparent', 'important');
   });
 
-  await page.screenshot({ path: 'screenshot.png', fullPage: true });
+  await page.screenshot({
+    path: 'screenshot.png',
+    fullPage: true,
+    omitBackground: true
+  });
 
   await browser.close();
 })();
