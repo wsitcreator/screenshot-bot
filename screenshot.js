@@ -4,33 +4,32 @@ const path = require('path');
 
 (async () => {
   const browser = await puppeteer.launch({
-    headless: "new",
+    headless: 'new',
     args: ['--no-sandbox']
   });
 
   const page = await browser.newPage();
 
-  // تنظیم سایز و زوم مناسب برای فونت واضح
-  await page.setViewport({
-    width: 390,   // مشابه iPhone 12
-    height: 844,
-    deviceScaleFactor: 2
-  });
+  // فایل JSON شامل لیست کالاها و URLها
+  const urls = JSON.parse(fs.readFileSync('urls.json', 'utf-8'));
 
-  await page.goto('https://wsitcreator.github.io/stats-page/', {
-    waitUntil: 'networkidle2'
-  });
+  for (const item of urls) {
+    await page.goto(item.url, { waitUntil: 'networkidle2' });
 
-  // پس‌زمینه ترنسپرنت
-  await page.evaluate(() => {
-    document.body.style.background = 'transparent';
-  });
+    // منتظر بمون تا باکس آماری لود بشه
+    await page.waitForSelector('.stats-box');
 
-  await page.screenshot({
-    path: 'screenshot.png',
-    fullPage: false,
-    omitBackground: true  // کلید ترنسپرنت بودن
-  });
+    // پیدا کردن همان بخش خاص
+    const statsElement = await page.$('.stats-box');
+
+    // مسیر خروجی
+    const outputPath = path.join('screenshots', `${item.id}.png`);
+
+    // اسکرین‌شات فقط از همان div آماری
+    await statsElement.screenshot({ path: outputPath });
+
+    console.log(`✅ Saved screenshot for ${item.id}`);
+  }
 
   await browser.close();
 })();
