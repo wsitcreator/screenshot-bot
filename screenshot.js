@@ -10,7 +10,7 @@ const path = require('path');
 
   const page = await browser.newPage();
 
-  // تنظیم سایز و زوم مناسب برای فونت واضح
+  // تنظیم اندازه‌ی موبایل
   await page.setViewport({
     width: 390,
     height: 844,
@@ -21,20 +21,20 @@ const path = require('path');
     waitUntil: 'networkidle2'
   });
 
-  // پس‌زمینه ترنسپرنت
+  // حذف پس‌زمینه سفید برای ترنسپرنت بودن
   await page.evaluate(() => {
     document.body.style.background = 'transparent';
   });
 
-  // اسکرین‌شات با حاشیه کمتر و شروع بالاتر
+  // گرفتن دقیق باکس آمار با حاشیه کمتر و بالاتر
   await page.screenshot({
     path: 'screenshot.png',
     omitBackground: true,
     clip: {
-      x: 15,           // کاهش حاشیه سمت چپ
-      y: 10,           // شروع از بالاتر برای نمایش کامل امتیاز
-      width: 360,      // کاهش عرض برای حذف فضای خالی سمت راست
-      height: 230      // به اندازه کافی برای کل باکس آمار
+      x: 5,            // حاشیه چپ بسیار کم
+      y: 0,            // از بالاترین نقطه شروع کن
+      width: 380,      // کاهش عرض برای حذف حاشیه سمت راست
+      height: 250      // کمی افزایش برای نمایش کامل ستاره + آمار
     }
   });
 
