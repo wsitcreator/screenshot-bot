@@ -31,10 +31,10 @@ const path = require('path');
     path: 'screenshot.png',
     omitBackground: true,
     clip: {
-  x: 9,          // ← حاشیه چپ
+  x: 7,          // ← حاشیه چپ
   y: 0,           // از بالاترین نقطه شروع کن
-  width: 100,     // حاشیه راست
-  height: 180     // ارتفاع
+  width: 50,     // حاشیه راست
+  height: 200     // ارتفاع
    }
   });
 
