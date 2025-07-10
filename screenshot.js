@@ -31,9 +31,9 @@ const path = require('path');
     path: 'screenshot.png',
     omitBackground: true,
     clip: {
-  x: 7,          // ← حاشیه چپ
+  x: 10,          // ← حاشیه چپ
   y: 0,           // از بالاترین نقطه شروع کن
-  width: 10,     // حاشیه راست
+  width: 30,     // حاشیه راست
   height: 250     // ارتفاع
    }
   });
