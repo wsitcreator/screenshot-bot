@@ -10,25 +10,29 @@ const path = require('path');
 
   const page = await browser.newPage();
 
-  // فایل JSON شامل لیست کالاها و URLها
+  // خواندن لیست آدرس‌ها
   const urls = JSON.parse(fs.readFileSync('urls.json', 'utf-8'));
 
   for (const item of urls) {
-    await page.goto(item.url, { waitUntil: 'networkidle2' });
+    try {
+      await page.goto(item.url, { waitUntil: 'networkidle2' });
 
-    // منتظر بمون تا باکس آماری لود بشه
-    await page.waitForSelector('.stats-box');
+      // منتظر ماندن برای لود stats-box
+      await page.waitForSelector('.stats-box', { timeout: 15000 });
 
-    // پیدا کردن همان بخش خاص
-    const statsElement = await page.$('.stats-box');
+      const statsElement = await page.$('.stats-box');
 
-    // مسیر خروجی
-    const outputPath = path.join('screenshots', `${item.id}.png`);
+      if (statsElement) {
+        const outputPath = path.join('screenshots', `${item.id}.png`);
+        await statsElement.screenshot({ path: outputPath });
+        console.log(`✅ Saved screenshot for ${item.id}`);
+      } else {
+        console.warn(`⚠️ .stats-box not found in DOM for ${item.id}`);
+      }
 
-    // اسکرین‌شات فقط از همان div آماری
-    await statsElement.screenshot({ path: outputPath });
-
-    console.log(`✅ Saved screenshot for ${item.id}`);
+    } catch (err) {
+      console.error(`❌ Failed for ${item.id}: ${err.message}`);
+    }
   }
 
   await browser.close();
