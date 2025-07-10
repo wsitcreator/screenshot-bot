@@ -32,9 +32,9 @@ const path = require('path');
     omitBackground: true,
     clip: {
   x: 9,          // ← حاشیه چپ
-  y: 5,           // از بالاترین نقطه شروع کن
+  y: 7,           // از بالاترین نقطه شروع کن
   width: 182,     // حاشیه راست
-  height: 205     // ارتفاع
+  height: 202     // ارتفاع
    }
   });
 
