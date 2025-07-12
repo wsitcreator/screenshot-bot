@@ -1,5 +1,3 @@
-محتوا .yml :
-
 name: Daily Screenshot
 
 permissions:
@@ -33,5 +31,5 @@ jobs:
           git config user.name "screenshot-bot"
           git config user.email "actions@github.com"
           git add screenshots/*.png
-          git commit -m "📸 Daily screenshots [skip ci]" || echo "No changes to commit"
+          git commit -m "📸 Daily screenshot [skip ci]" || echo "No changes to commit"
           git push
