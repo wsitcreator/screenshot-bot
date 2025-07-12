@@ -31,14 +31,14 @@ const urls = JSON.parse(fs.readFileSync('urls.json', 'utf-8'));
     // منتظر بمون تا متن "Sold" داخل div آمار بیاد
     await page.waitForFunction(
       (selector) => {
-        const el = document.querySelector(selector);
-        return el && el.innerText && el.innerText.includes('Sold');
-      },
-      {
-        timeout: 10000 // صبر تا ۱۰ ثانیه
-      },
-      item.selector
-    );
+       const el = document.querySelector(selector);
+       return el && el.innerText.length > 10; // فقط وجود متن کفایت کنه
+    },
+    {
+      timeout: 30000 // ۳۰ ثانیه صبر کنه
+    },
+  item.selector
+);
 
     // اسکرین‌شات از بخش مشخص
     await page.screenshot({
