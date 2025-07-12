@@ -28,7 +28,13 @@ const urls = JSON.parse(fs.readFileSync('urls.json', 'utf-8'));
       document.body.style.background = 'transparent';
     });
 
-    // گرفتن اسکرین‌شات از ناحیه مشخص با ابعاد دقیق ثابت
+    // منتظر بمون تا متن داخل div کامل لود شه
+    await page.waitForFunction((selector) => {
+      const el = document.querySelector(selector);
+      return el && el.innerText && el.innerText.includes('⭐');
+    }, {}, item.selector);
+
+    // اسکرین‌شات از ناحیه ثابت
     await page.screenshot({
       path: path.join('screenshots', `${item.id}.png`),
       omitBackground: true,
