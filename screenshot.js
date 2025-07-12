@@ -28,19 +28,19 @@ const urls = JSON.parse(fs.readFileSync('urls.json', 'utf-8'));
       document.body.style.background = 'transparent';
     });
 
-    // منتظر بمون تا متن داخل div کامل لود شه
+    // منتظر بمون تا متن "Sold" داخل div آمار بیاد
     await page.waitForFunction(
-    (selector) => {
-    const el = document.querySelector(selector);
-    return el && el.innerText && el.innerText.includes('⭐');
-   },
-   {
-    timeout: 10000  // ← صبر تا 10 ثانیه
-   },
-   item.selector
-   );
+      (selector) => {
+        const el = document.querySelector(selector);
+        return el && el.innerText && el.innerText.includes('Sold');
+      },
+      {
+        timeout: 10000 // صبر تا ۱۰ ثانیه
+      },
+      item.selector
+    );
 
-    // اسکرین‌شات از ناحیه ثابت
+    // اسکرین‌شات از بخش مشخص
     await page.screenshot({
       path: path.join('screenshots', `${item.id}.png`),
       omitBackground: true,
