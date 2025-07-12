@@ -11,6 +11,8 @@ const urls = JSON.parse(fs.readFileSync('urls.json', 'utf-8'));
   });
 
   for (const item of urls) {
+    console.log(`⏳ Processing: ${item.id}`);
+
     const page = await browser.newPage();
 
     await page.setViewport({
@@ -19,44 +21,43 @@ const urls = JSON.parse(fs.readFileSync('urls.json', 'utf-8'));
       deviceScaleFactor: 2
     });
 
-    await page.goto(item.url, {
-      waitUntil: 'networkidle2'
-    });
+    try {
+      await page.goto(item.url, {
+        waitUntil: 'networkidle2',
+        timeout: 60000  // 60 ثانیه
+      });
 
-    await page.evaluate(() => {
-      document.body.style.background = 'transparent';
-    });
+      // شفاف کردن پس‌زمینه
+      await page.evaluate(() => {
+        document.body.style.background = 'transparent';
+      });
 
-    // اگر selector داریم، صبر کن تا واقعاً نمایان بشه
-    if (item.selector) {
-      try {
-        await page.waitForFunction(
-          (selector) => {
-            const el = document.querySelector(selector);
-            if (!el) return false;
-            const rect = el.getBoundingClientRect();
-            return rect.width > 0 && rect.height > 0;
-          },
-          { timeout: 15000 },  // تا ۱۵ ثانیه صبر می‌کنه واقعاً لود شه
-          item.selector
-        );
-      } catch (err) {
-        console.log(`❌ Timeout: selector '${item.selector}' not visible for ${item.id}`);
-        await page.close();
+      // منتظر لود کامل selector
+      await page.waitForFunction(
+        (selector) => {
+          const el = document.querySelector(selector);
+          return el && el.innerText && el.innerText.includes('⭐');
+        },
+        { timeout: 10000 },  // صبر تا ۱۰ ثانیه
+        item.selector
+      );
+
+      // یافتن المنت و گرفتن اسکرین‌شات
+      const element = await page.$(item.selector);
+      if (!element) {
+        console.warn(`⚠️ Selector not found: ${item.selector}`);
         continue;
       }
-    }
 
-    await page.screenshot({
-      path: path.join('screenshots', `${item.id}.png`),
-      omitBackground: true,
-      clip: {
-        x: 9,
-        y: 7,
-        width: 185,
-        height: 202
-      }
-    });
+      await element.screenshot({
+        path: path.join('screenshots', `${item.id}.png`),
+        omitBackground: true
+      });
+
+      console.log(`✅ Screenshot saved: ${item.id}.png`);
+    } catch (error) {
+      console.error(`❌ Error for ${item.id}:`, error.message);
+    }
 
     await page.close();
   }
