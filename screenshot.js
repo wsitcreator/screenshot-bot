@@ -23,24 +23,30 @@ const urls = JSON.parse(fs.readFileSync('urls.json', 'utf-8'));
       waitUntil: 'networkidle2'
     });
 
-    // ترنسپرنت کردن پس‌زمینه
     await page.evaluate(() => {
       document.body.style.background = 'transparent';
     });
 
-    // منتظر بمون تا متن "Sold" داخل div آمار بیاد
-    await page.waitForFunction(
-      (selector) => {
-       const el = document.querySelector(selector);
-       return el && el.innerText.length > 10; // فقط وجود متن کفایت کنه
-    },
-    {
-      timeout: 60000 // 60 ثانیه صبر کنه
-    },
-  item.selector
-);
+    // اگر selector داریم، صبر کن تا واقعاً نمایان بشه
+    if (item.selector) {
+      try {
+        await page.waitForFunction(
+          (selector) => {
+            const el = document.querySelector(selector);
+            if (!el) return false;
+            const rect = el.getBoundingClientRect();
+            return rect.width > 0 && rect.height > 0;
+          },
+          { timeout: 15000 },  // تا ۱۵ ثانیه صبر می‌کنه واقعاً لود شه
+          item.selector
+        );
+      } catch (err) {
+        console.log(`❌ Timeout: selector '${item.selector}' not visible for ${item.id}`);
+        await page.close();
+        continue;
+      }
+    }
 
-    // اسکرین‌شات از بخش مشخص
     await page.screenshot({
       path: path.join('screenshots', `${item.id}.png`),
       omitBackground: true,
