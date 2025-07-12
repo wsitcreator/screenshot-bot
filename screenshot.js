@@ -35,7 +35,7 @@ const urls = JSON.parse(fs.readFileSync('urls.json', 'utf-8'));
        return el && el.innerText.length > 10; // فقط وجود متن کفایت کنه
     },
     {
-      timeout: 30000 // ۳۰ ثانیه صبر کنه
+      timeout: 60000 // 60 ثانیه صبر کنه
     },
   item.selector
 );
