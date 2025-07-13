@@ -2,65 +2,41 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path');
 
-const urls = JSON.parse(fs.readFileSync('urls.json', 'utf-8'));
-
 (async () => {
   const browser = await puppeteer.launch({
-    headless: 'new',
+    headless: "new",
     args: ['--no-sandbox']
   });
 
-  for (const item of urls) {
-    console.log(`⏳ Processing: ${item.id}`);
+  const page = await browser.newPage();
 
-    const page = await browser.newPage();
+  // تنظیم اندازه‌ی موبایل
+  await page.setViewport({
+    width: 390,
+    height: 844,
+    deviceScaleFactor: 2
+  });
 
-    await page.setViewport({
-      width: 390,
-      height: 844,
-      deviceScaleFactor: 2
-    });
+  await page.goto('https://wsitcreator.github.io/stats-page/', {
+    waitUntil: 'networkidle2'
+  });
 
-    try {
-      await page.goto(item.url, {
-        waitUntil: 'networkidle2',
-        timeout: 60000  // 60 ثانیه
-      });
+  // حذف پس‌زمینه سفید برای ترنسپرنت بودن
+  await page.evaluate(() => {
+    document.body.style.background = 'transparent';
+  });
 
-      // شفاف کردن پس‌زمینه
-      await page.evaluate(() => {
-        document.body.style.background = 'transparent';
-      });
-
-      // منتظر لود کامل selector
-      await page.waitForFunction(
-        (selector) => {
-          const el = document.querySelector(selector);
-          return el && el.innerText && el.innerText.includes('⭐');
-        },
-        { timeout: 10000 },  // صبر تا ۱۰ ثانیه
-        item.selector
-      );
-
-      // یافتن المنت و گرفتن اسکرین‌شات
-      const element = await page.$(item.selector);
-      if (!element) {
-        console.warn(`⚠️ Selector not found: ${item.selector}`);
-        continue;
-      }
-
-      await element.screenshot({
-        path: path.join('screenshots', `${item.id}.png`),
-        omitBackground: true
-      });
-
-      console.log(`✅ Screenshot saved: ${item.id}.png`);
-    } catch (error) {
-      console.error(`❌ Error for ${item.id}:`, error.message);
-    }
-
-    await page.close();
-  }
+  // گرفتن دقیق باکس آمار با حاشیه کمتر و بالاتر
+  await page.screenshot({
+    path: 'screenshot.png',
+    omitBackground: true,
+    clip: {
+  x: 9,          // ← حاشیه چپ
+  y: 7,           // از بالاترین نقطه شروع کن
+  width: 185,     // حاشیه راست
+  height: 202     // ارتفاع
+   }
+  });
 
   await browser.close();
 })();
