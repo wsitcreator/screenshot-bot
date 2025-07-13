@@ -1,12 +1,14 @@
-({
-  "name": "screenshot-bot",
-  "version": "1.0.0",
-  "description": "Daily screenshot from GitHub Pages",
-  "main": "screenshot.js",
-  "scripts": {
-    "start": "node screenshot.js"
+[
+  {
+    "id": "women-dress-001",
+    "url": "https://selglo.com/english-women-dress-001/"
   },
-  "dependencies": {
-    "puppeteer": "^21.3.8"
+  {
+    "id": "women-dress-002",
+    "url": "https://selglo.com/english-women-dress-002/"
+  },
+  {
+    "id": "shoes-004",
+    "url": "https://selglo.com/english-shoes-004/"
   }
-}
+]
